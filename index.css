@@ -1,5 +1,30 @@
-/* Additional global styles if needed */
-/* Tailwind CSS is loaded from CDN in index.html */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #0f172a;
+    color: #f8fafc;
+  }
+  
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #1e293b; 
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #475569; 
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #64748b; 
+  }
+}
 
 @keyframes fade-in {
   from {
