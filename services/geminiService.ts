@@ -1,7 +1,13 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { TopicSuggestion, GeneratedScript } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+
+if (!apiKey) {
+  throw new Error("VITE_GEMINI_API_KEY is not set. Please add it to your .env.local file or Vercel environment variables.");
+}
+
+const ai = new GoogleGenAI({ apiKey });
 
 /**
  * Analyzes the reference script and generates topic suggestions using gemini-2.5-flash.
