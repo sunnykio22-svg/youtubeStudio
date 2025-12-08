@@ -50,9 +50,12 @@ export const analyzeAndSuggestTopics = async (referenceScript: string): Promise<
     if (!jsonText) throw new Error("No response from AI");
     
     return JSON.parse(jsonText) as TopicSuggestion[];
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error generating topics:", error);
-    throw error;
+    if (error?.message?.includes('429') || error?.message?.includes('quota')) {
+      throw new Error('API 할당량이 초과되었습니다. 잠시 후 (1분 후) 다시 시도해주세요.');
+    }
+    throw new Error('주제 분석 중 오류가 발생했습니다: ' + (error?.message || '알 수 없는 오류'));
   }
 };
 
@@ -79,9 +82,9 @@ export const generateScript = async (referenceScript: string, topic: TopicSugges
       - 의도: ${topic.reason}
     `;
 
-    // gemini-3-pro-preview is used for complex creative writing tasks
+    // gemini-1.5-flash is faster and has better quota limits
     const response = await ai.models.generateContent({
-      model: "gemini-3-pro-preview",
+      model: "gemini-1.5-flash",
       contents: [
         { role: "user", parts: [{ text: `[참고 대본]\n${referenceScript}` }] },
         { role: "user", parts: [{ text: prompt }] },
@@ -104,8 +107,11 @@ export const generateScript = async (referenceScript: string, topic: TopicSugges
     if (!jsonText) throw new Error("No response from AI");
 
     return JSON.parse(jsonText) as GeneratedScript;
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error generating script:", error);
-    throw error;
+    if (error?.message?.includes('429') || error?.message?.includes('quota')) {
+      throw new Error('API 할당량이 초과되었습니다. 잠시 후 (1분 후) 다시 시도해주세요.');
+    }
+    throw new Error('대본 생성 중 오류가 발생했습니다: ' + (error?.message || '알 수 없는 오류'));
   }
 };
