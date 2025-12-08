@@ -23,7 +23,7 @@ export const analyzeAndSuggestTopics = async (referenceScript: string): Promise<
     `;
 
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: "gemini-2.0-flash-exp",
       contents: [
         { role: "user", parts: [{ text: `참고 대본:\n${referenceScript}` }] },
         { role: "user", parts: [{ text: prompt }] },
@@ -82,9 +82,9 @@ export const generateScript = async (referenceScript: string, topic: TopicSugges
       - 의도: ${topic.reason}
     `;
 
-    // gemini-1.5-flash is faster and has better quota limits
+    // Using gemini-2.0-flash-exp for better performance and quota
     const response = await ai.models.generateContent({
-      model: "gemini-1.5-flash",
+      model: "gemini-2.0-flash-exp",
       contents: [
         { role: "user", parts: [{ text: `[참고 대본]\n${referenceScript}` }] },
         { role: "user", parts: [{ text: prompt }] },
